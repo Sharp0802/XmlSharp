@@ -1,13 +1,16 @@
 # XmlSharp
-easy serialization to xml in C#
+lib for easy serialization to xml in C#
 
 
 
-
-How to use?
-
+for .Net Standard 2.0
 
 
+
+## How to use?
+
+<pre>
+<code>
 class Test
 
 {
@@ -36,3 +39,5 @@ obj.ToXmlFrom().Serialize("../path"); //write xml string of obj in rom
 
 
 obj = "path".Deserialize().FromXmlTo() as Test; //read xml and convert to object
+</code>
+</pre>
