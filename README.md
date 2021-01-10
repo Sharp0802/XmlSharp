@@ -1,9 +1,5 @@
 # XmlSharp
-lib for easy serialization to xml in C#
-
-
-
-for .Net Standard 2.0
+lib for easy serialization to xml in C#/.Net Standard 2.0
 
 
 
