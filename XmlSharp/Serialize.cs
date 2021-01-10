@@ -7,26 +7,6 @@ using System.Xml;
 
 namespace XmlSharp
 {
-    public class Program
-    {
-        public static Data data = new Data();
-
-        public static void Main()
-        {
-            string dataxml = data.ToXmlFrom();
-            Console.WriteLine(dataxml);
-            data = (Data)dataxml.FromXmlTo();
-            dataxml = data.ToXmlFrom();
-            Console.WriteLine(dataxml);
-        }
-    }
-
-    public class Data
-    {
-        [XmlSerializable]
-        public string A { get; set; } = "가나다";
-    }
-
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class XmlSerializable : Attribute { }
 
