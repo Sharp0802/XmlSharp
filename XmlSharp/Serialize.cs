@@ -3,11 +3,30 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Xml;
 
 namespace XmlSharp
 {
+    public class Program
+    {
+        public static Data data = new Data();
+
+        public static void Main()
+        {
+            string dataxml = data.ToXmlFrom();
+            Console.WriteLine(dataxml);
+            data = (Data)dataxml.FromXmlTo();
+            dataxml = data.ToXmlFrom();
+            Console.WriteLine(dataxml);
+        }
+    }
+
+    public class Data
+    {
+        [XmlSerializable]
+        public string A { get; set; } = "가나다";
+    }
+
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class XmlSerializable : Attribute { }
 
@@ -30,7 +49,11 @@ namespace XmlSharp
                     var e = docs.CreateElement("Property");
                     e.SetAttribute("name", p.Name);
 
-                    e.SetAttribute("value", p.GetValue(obj).ToString());
+                    string value = p
+                        .GetValue(obj)
+                        .ObjectToBytes()
+                        .ToBase64();
+                    e.SetAttribute("value", value);
                     root.AppendChild(e);
                 });
 
@@ -51,7 +74,11 @@ namespace XmlSharp
             foreach (var node in xmlObj.ChildNodes.Cast<XmlElement>())
             {
                 var pt = obj.GetType().GetProperty(node.GetAttribute("name"));
-                pt.SetValue(obj, Convert.ChangeType(node.GetAttribute("value"), pt.PropertyType));
+                var value = node
+                    .GetAttribute("value")
+                    .FromBase64()
+                    .BytesToObject();
+                pt.SetValue(obj, value);
             }
 
             return obj;
@@ -83,24 +110,27 @@ namespace XmlSharp
 
     internal static class Convert
     {
-        internal static string BytesToString(byte[] bytes) => Encoding.UTF8.GetString(bytes);
-        internal static byte[] StringToBytes(string str) => Encoding.UTF8.GetBytes(str);
-
-        public static object BytesToObject(byte[] arrBytes)
+        internal static object BytesToObject(this byte[] bytes)
         {
-            using var memStream = new MemoryStream();
+            using (var memStream = new MemoryStream())
+            {
                 var binForm = new BinaryFormatter();
-                memStream.Write(arrBytes, 0, arrBytes.Length);
+                memStream.Write(bytes, 0, bytes.Length);
                 memStream.Seek(0, SeekOrigin.Begin);
-                var obj = binForm.Deserialize(memStream);
-                return obj;
+                return binForm.Deserialize(memStream);
+            }
         }
-        public static byte[] ObjectToBytes(object obj)
+        internal static byte[] ObjectToBytes(this object obj)
         {
             BinaryFormatter bf = new BinaryFormatter();
-            using var ms = new MemoryStream();
+            using (var ms = new MemoryStream())
+            {
                 bf.Serialize(ms, obj);
                 return ms.ToArray();
+            }
         }
+
+        internal static string ToBase64(this byte[] bytes) => System.Convert.ToBase64String(bytes);
+        internal static byte[] FromBase64(this string str) => System.Convert.FromBase64String(str);
     }
 }
