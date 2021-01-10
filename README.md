@@ -23,7 +23,9 @@ class Test
   
   Ignore access modifiers.
   
-  The value of the property being serialized is object.ToString() */
+  The value of the property being serialized is object.ToString()
+  
+  must be declared "implicit operator TypeName(string str)" */
   
 }
 
