@@ -48,10 +48,8 @@ namespace XmlSharp
 
             foreach (var node in xmlObj.ChildNodes.Cast<XmlElement>())
             {
-                obj.GetType()
-                    .GetProperty(node.GetAttribute("name"))
-                    .GetSetMethod()
-                    .Invoke(obj, new object[] { node.GetAttribute("value") });
+                var pt = obj.GetType().GetProperty(node.GetAttribute("name"));
+                pt.SetValue(obj, Convert.ChangeType(node.GetAttribute("value"), pt.PropertyType));
             }
 
             return obj;
