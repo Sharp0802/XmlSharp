@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <Company />
     <Authors>Sharp0802</Authors>
+    <Version>1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
