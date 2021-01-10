@@ -15,13 +15,7 @@ class Test
   
   private string exampleString {get; set;}
   
-  /* must be property.
-  
-  Ignore access modifiers.
-  
-  The value of the property being serialized is object.ToString()
-  
-  must be declared "implicit operator TypeName(string str)" */
+  /* must be property. Ignore access modifiers. */
   
 }
 
